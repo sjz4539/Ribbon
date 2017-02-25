@@ -5,23 +5,31 @@ Created on Feb 18, 2017
 '''
 
 from Node import Node
-from ribbon.ReminderView import ReminderView
+from ReminderView import ReminderView
 
 class Reminder(Node):
     '''
     classdocs
     '''
     
-    def __init__(self, title=None, message=None):
-        super().__init__()
+    def __init__(self, when, title=None, message=None):
+        super().__init__(self)
+        
+        self.views = {}
+        
+        self.when = when
         self.title = title if not title is None else ""
         self.message = message if not message is None else ""
-        self.triggered = False
-    
-        
-    def setTriggered(self, trig):
-        self.triggered = trig
         
         
     def getView(self, parent):
-        return ReminderView(parent)
+        if parent not in self.views:
+            self.views[parent] = ReminderView(parent, self)
+            
+        return self.views[parent]
+    
+    
+    def destroyView(self, parent):
+        if parent in self.views:
+            self.views[parent].destroy()
+            del self.views[parent]

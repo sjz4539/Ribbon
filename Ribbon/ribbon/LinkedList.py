@@ -14,7 +14,11 @@ class LinkedList(object):
         self.tail = None
         self.next = None
         
+        
+    def __iter__(self):
+        return LLIterator(self.head)
     
+
     def append(self, node, after=None):
         if not after is None: # insert after target node
             
@@ -124,4 +128,27 @@ class LinkedList(object):
             
         return ret
     
+    
+    def peek(self):
+        return self.next
+    
+    
+    def empty(self):
+        return self.head is None
+ 
+ 
+class LLIterator(object):
+    
+    def __init__(self, head):
+        self.cur = head
+            
+            
+    def __next__(self):
+        if self.cur is None:
+            raise StopIteration
+        else:
+            ret = self.cur
+            self.cur = self.cur.nextNode
+            return ret
+            
     

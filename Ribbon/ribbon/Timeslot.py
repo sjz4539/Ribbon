@@ -6,18 +6,30 @@ Created on Feb 18, 2017
 
 from Node import Node
 from LinkedList import LinkedList
-from datetime import datetime
-from ribbon.TimeslotView import TimeslotView
+from TimeslotView import TimeslotView
 
-class Timeslot(Node, LinkedList):
+class Timeslot(LinkedList, Node):
     '''
     classdocs
     '''
 
-    def __init__(self, time=datetime.now()):
-        super().__init__()
+    def __init__(self, time):
+        LinkedList.__init__(self)
+        Node.__init__(self)
+        
+        self.views = {}
+        
         self.time = time
         
-    
+        
     def getView(self, parent):
-        return TimeslotView(parent, self)
+        if parent not in self.views:
+            self.views[parent] = TimeslotView(parent, self)
+            
+        return self.views[parent]
+    
+    
+    def destroyView(self, parent):
+        if parent in self.views:
+            self.views[parent].destroy()
+            del self.views[parent]
